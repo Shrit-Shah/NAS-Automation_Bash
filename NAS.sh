@@ -1,4 +1,4 @@
-#! bash
+#!/bin/bash
 
 $client_ip = $(hostname -I | awk {'print $1}') # Client Private IP-address
 $client_ip = $(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
