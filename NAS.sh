@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#$client_ip = $(hostname -I | awk {'print $1}') # Client Private IP-address
-#$client_ip = $(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
+#$client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
+#$client_ip=$(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
 
 #read server_ip  # Geting Server IP-address from user
 
@@ -26,15 +26,16 @@ new_setup()
     echo -e "\vWhere do you want to setup your storage server? \n\n\t1) Another system on the same LAN. \n\t2) In a cloud virtual machine."
     read -p "--> " server_location
 
-    if [ $server_location -eq 1]
+    if [ $server_location -eq 1 ]
     then
-        $client_ip = $(hostname -I | awk {'print $1}') # Client Private IP-address
-        read -p "Enter private ip-address of the server system: " $server_ip
+        client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
+        read -p "Enter private ip-address of the server system: " server_ip
         
         # IP validation - REGEX
 
-        echo "Establishing connection to $server_ip"
-        if [ ping -c 5 $server_ip ]
+        echo -e "Establishing connection to $server_ip ... \n"
+        ping -c 5 $server_ip >> /dev/null
+        if [ $? ]
         then 
             echo "Connection Successful"
         else
@@ -53,7 +54,7 @@ do
     case $menu_opt in 
         1) 
             new_setup
-        ;;
+            ;;
         2) echo "Menu 2"
             ;;
         00) echo "Exit opt"
@@ -63,7 +64,6 @@ do
             echo "Select valid option from the menu"
             ;;
     esac
-
 
 done
 
