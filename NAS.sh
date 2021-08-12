@@ -29,10 +29,18 @@ new_setup()
     if [ $server_location -eq 1]
     then
         $client_ip = $(hostname -I | awk {'print $1}') # Client Private IP-address
-        
         read -p "Enter private ip-address of the server system: " $server_ip
+        
         # IP validation - REGEX
 
+        echo "Establishing connection to $server_ip"
+        if [ ping -c 5 $server_ip ]
+        then 
+            echo "Connection Successful"
+        else
+            echo "Connection Failed"
+        fi
+        
     fi
 }
 
