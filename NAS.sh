@@ -21,15 +21,30 @@
 
 #mount $server_ip:$server_bak_dir $client_dir
 
+new_setup()
+{
+    echo -e "\vWhere do you want to setup your storage server? \n\n\t1) Another system on the same LAN. \n\t2) In a cloud virtual machine."
+    read -p "--> " server_location
+
+    if [ $server_location -eq 1]
+    then
+        $client_ip = $(hostname -I | awk {'print $1}') # Client Private IP-address
+        
+        read -p "Enter private ip-address of the server system: " $server_ip
+        # IP validation - REGEX
+
+    fi
+}
+
 while [ 0 ]
 do
-    echo -e "1) Setup new storage \n2) Modify exixting configuration \n00) Exit";
+    echo -e "\v1) Setup new storage \n2) Modify existing configuration \n00) Exit" #Main Menu
 
-    read -p "-->" menu_opt
+    read -p "--> " menu_opt
 
     case $menu_opt in 
         1) 
-            echo "Menu 1"
+            new_setup
         ;;
         2) echo "Menu 2"
             ;;
