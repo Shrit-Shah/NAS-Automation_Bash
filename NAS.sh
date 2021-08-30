@@ -42,8 +42,16 @@ new_setup()
             echo "Connection Successful"
 
             read -p "Enter Server username: " usr_name
-            scp server.sh  ${usr_name}@${server_ip}:/tmp/ 
-            ssh ${usr_name}@${server_ip} 'sudo -S -p "Enter sudo password of server-side: " bash /tmp/server.sh' 
+            scp server.sh  ${usr_name}@${server_ip}:/tmp/
+            if [ $? -eq 0 ]
+            then
+                echo "SSH connection successful"
+            else
+                echo -e "SSH connection failed\nPlease run the below commands manually on the server system & run this script again."
+                echo -e "\v\tsudo yum install openssh \n\tsudo systemctl enable --now sshd"
+            fi
+            cmd=$(echo sudo -S -p "Enter sudo password of server-side: " bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
+            ssh ${usr_name}@${server_ip} $cmd 
         else
             echo "Connection Failed"
         fi
