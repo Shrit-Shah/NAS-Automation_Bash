@@ -35,11 +35,15 @@ new_setup()
         
         # IP validation - REGEX: ((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}
 
-        echo -e "Establishing connection to $server_ip ... \n"
-        ping -c 5 $server_ip >> /dev/null
-        if [ $? ]
+        echo -e "\nEstablishing connection to $server_ip ... \n"
+        ping -c 3 $server_ip &>> /dev/null
+        if [ $? -eq 0 ]
         then 
             echo "Connection Successful"
+
+            read -p "Enter Server username: " usr_name
+            scp server.sh  ${usr_name}@${server_ip}:/tmp/ 
+            ssh ${usr_name}@${server_ip} 'sudo -S -p "Enter sudo password of server-side: " bash /tmp/server.sh' 
         else
             echo "Connection Failed"
         fi
