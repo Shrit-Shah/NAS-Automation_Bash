@@ -1,5 +1,7 @@
 #!/bin/bash
 
+figlet NAS Automation 
+echo -e "By:\t Shrit Shah\tHarshil Shah\tNisarg Khacharia"
 #$client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
 #$client_ip=$(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
 
@@ -31,7 +33,7 @@ new_setup()
         client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
         read -p "Enter private ip-address of the server system: " server_ip
         
-        # IP validation - REGEX
+        # IP validation - REGEX: ((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}
 
         echo -e "Establishing connection to $server_ip ... \n"
         ping -c 5 $server_ip >> /dev/null
@@ -47,7 +49,7 @@ new_setup()
 
 while [ 0 ]
 do
-    echo -e "\v1) Setup new storage \n2) Modify existing configuration \n00) Exit" #Main Menu
+    echo -e "\v\t1) Setup new storage \n\t2) Modify existing configuration \n\t00) Exit" #Main Menu
 
     read -p "--> " menu_opt
 
