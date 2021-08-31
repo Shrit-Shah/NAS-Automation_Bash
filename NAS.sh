@@ -1,7 +1,7 @@
 #!/bin/bash
 
 figlet NAS Automation 
-echo -e "By:\t Shrit Shah\tHarshil Shah\tNisarg Khacharia"
+echo -e "   By:\t\tShrit Shah\tHarshil Shah\tNisarg Khacharia"
 #$client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
 #$client_ip=$(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
 
@@ -42,20 +42,21 @@ new_setup()
             echo "Connection Successful"
 
             read -p "Enter Server username: " usr_name
-            scp server.sh  ${usr_name}@${server_ip}:/tmp/
+            scp server.sh  ${usr_name}@${server_ip}:/tmp/ &>> /dev/null
             if [ $? -eq 0 ]
             then
                 echo "SSH connection successful"
                 read -p "Name of backup folder on the server: " server_bak_dir
-                cmd=$(echo sudo -S -p "Enter sudo password of server-side: " bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
+                cmd=$(echo sudo -S -p "Enter\ sudo\ password\ of\ server-side: " bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
                 echo "Configuring NAS server on $server_ip ..."
                 ssh ${usr_name}@${server_ip} $cmd
                 if [ $? -eq 0 ]
                 then   
                     echo "NAS Server configuration successful"
                     read -p "Name of backup folder here on the client: " client_dir
-                    mkdir $client_dir
-                    mount ${server_ip}:/home/${usr_name}/${server_bak_dir} ${HOME}/Desktop/${client_dir}
+                    mkdir ${HOME}/Desktop/${client_dir}
+                    
+                    sudo mount  ${server_ip}:/home/${usr_name}/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
                 else
                     echo "NAS Server configuration failed"
                 fi
@@ -67,10 +68,16 @@ new_setup()
             echo "Connection Failed"
         fi
     fi
+
+    if [ $server_location -eq 2 ]
+    then
+        echo "Coming Soon!!"
+    fi
 }
 
 while [ 0 ]
 do
+    echo "-----------------------------------------------------------------------------"
     echo -e "\v\t1) Setup new storage \n\t2) Modify existing configuration \n\t00) Exit" #Main Menu
 
     read -p "--> " menu_opt
@@ -79,7 +86,7 @@ do
         1) 
             new_setup
             ;;
-        2) echo "Menu 2"
+        2) echo "Coming Soon!!"
             ;;
         00) echo "Exiting"
             break
@@ -90,5 +97,4 @@ do
     esac
 
 done
-
 exit 0

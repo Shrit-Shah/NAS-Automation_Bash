@@ -11,8 +11,10 @@ then
     systemctl enable --now nfs-server # Starting the NFS service
 fi
 mkdir /home/${usr_name}/${server_bak_dir}  # Create backup folder
+chmod 777 /home/${usr_name}/${server_bak_dir}
 
-echo "$server_bak_dir $client_ip (rw,no_root_squash)" | cat >> /etc/exports
+echo "/home/${usr_name}/${server_bak_dir} *(rw,no_root_squash)" | cat >> /etc/exports
 
+systemctl restart nfs-server
 
 exit 0
