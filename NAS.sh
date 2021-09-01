@@ -1,5 +1,6 @@
 #!/bin/bash
 
+yum -y install figlet
 figlet NAS Automation 
 echo -e "   By:\t\tShrit Shah\tHarshil Shah\tNisarg Khacharia"
 #$client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
