@@ -63,7 +63,7 @@ new_setup()
                 fi
             else
                 echo -e "SSH connection failed\nPlease run the below commands manually on the server system & run this script again."
-                echo -e "\v\tsudo yum install openssh \n\tsudo systemctl enable --now sshd"
+                echo -e "\v\tsudo yum -y install openssh \n\tsudo systemctl enable --now sshd"
             fi
         else
             echo "Connection Failed"
