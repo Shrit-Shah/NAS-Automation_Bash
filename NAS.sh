@@ -28,22 +28,22 @@ new_setup()
         ping -c 3 $server_ip &>> /dev/null
         if [ $? -eq 0 ]
         then 
-            echo "Connection Successful"
+            echo -e "Connection Successful\n"
 
             read -p "Enter Server username: " usr_name
             scp server.sh  ${usr_name}@${server_ip}:/tmp/ &>> /dev/null
             if [ $? -eq 0 ]
             then
-                echo "SSH connection successful"
+                echo -e "\nSSH connection successful\n"
                 
-                read -p "Name of backup folder on the server: " server_bak_dir
+                read -p "Name of backup folder on the Server: " server_bak_dir
                 cmd=$(echo sudo -S -p "Enter\ sudo\ password\ of\ server-side: " bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
-                echo "Configuring NAS server on $server_ip ..."
+                echo "\nConfiguring NAS server on $server_ip ...\n"
                 ssh ${usr_name}@${server_ip} $cmd
                 if [ $? -eq 0 ]
                 then   
                     echo -e "\nServer configuration successful\n"
-                    read -p "Name of backup folder here on the CLIENT: " client_dir
+                    read -p "Name of backup folder here on the Client: " client_dir
                     mkdir ${HOME}/Desktop/${client_dir}
                     
                     sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
