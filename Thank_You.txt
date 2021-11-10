@@ -1,0 +1,4 @@
+Thank You for using our NAS Backup Automation tool,
+Developed by: Shrit Shah
+
+You can now use this Folder as your Backup Storage.

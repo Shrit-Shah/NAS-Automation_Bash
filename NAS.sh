@@ -5,7 +5,7 @@ which figlet &>> /dev/null
 if [ $? -eq 0 ]
 then 
     figlet NAS Automation 
-    echo -e "   By:\t\tShrit Shah\tHarshil Shah\tNisarg Khacharia"
+    echo -e " \t\t\t  By:\tShrit Shah"
 else
     echo -e "\v\v \t\t\t\t NAS AUTOMATION \n"
 fi
@@ -19,11 +19,11 @@ new_setup()
     if [ $server_location -eq 1 ]
     then
         client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
-        read -p "Enter private ip-address of the server system: " server_ip
+        read -p "Enter Private ip-address of the server system: " server_ip
         
         # IP validation - REGEX: ((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}
 
-        echo -e "\nEstablishing connection to $server_ip ... \n"
+        echo -e "\n Establishing connection to $server_ip ... \n"
 
         ping -c 3 $server_ip &>> /dev/null
         if [ $? -eq 0 ]
@@ -38,7 +38,7 @@ new_setup()
                 
                 read -p "Name of backup folder on the Server: " server_bak_dir
                 cmd=$(echo sudo -S -p "Enter\ sudo\ password\ of\ server-side: " bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
-                echo "\nConfiguring NAS server on $server_ip ...\n"
+                echo -e "\n Configuring NAS server on $server_ip ...\n"
                 ssh ${usr_name}@${server_ip} $cmd
                 if [ $? -eq 0 ]
                 then   
@@ -49,7 +49,9 @@ new_setup()
                     sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
                     if [ $? -eq 0 ]
                     then    
-                        echo -e "\v\tSetup Successful"
+                        echo -e "\n Finalizing Setup...\t[This may take a minute]\n"
+                        cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
+                        echo -e "\v\tSetup Successful\n"
                         exit
                     fi
                 else
@@ -65,8 +67,54 @@ new_setup()
 
     elif [ $server_location -eq 2 ]
     then
-        echo "Coming Soon!!"
-        #$client_ip=$(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
+        client_ip=$(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
+        read -p "Enter Public ip-address of the server system: " server_ip
+        
+        # IP validation - REGEX: ((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}
+
+        echo -e "\n Establishing connection to $server_ip ... \n"
+
+        ping -c 3 $server_ip &>> /dev/null
+        if [ $? -eq 0 ]
+        then 
+            echo -e "Connection Successful\n"
+
+            read -p "Enter Server username: " usr_name
+            read -p "Enter location of Cloud-VM's Key file: " key_file
+            scp -i $key_file server.sh  ${usr_name}@${server_ip}:/tmp/ &>> /dev/null
+            if [ $? -eq 0 ]
+            then
+                echo -e "\nSSH connection successful\n"
+                
+                read -p "Name of backup folder on the Server: " server_bak_dir
+                cmd=$(echo sudo bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
+                echo -e "\n Configuring NAS server on $server_ip ...\n"
+                ssh -i $key_file ${usr_name}@${server_ip} $cmd
+                if [ $? -eq 0 ]
+                then   
+                    echo -e "\nServer configuration successful\n"
+                    read -p "Name of backup folder here on the Client: " client_dir
+                    mkdir ${HOME}/Desktop/${client_dir}
+                    
+                    sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
+                    if [ $? -eq 0 ]
+                    then    
+                        echo -e "\n Finalizing Setup...\t[This may take a minute]\n"
+                        cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
+                        echo -e "\v\tSetup Successful\n"
+                        exit
+                    fi
+                else
+                    echo "Server configuration failed"
+                fi
+            else
+                echo -e "SSH connection failed\nPlease run the below commands manually on the server system & run this script again."
+                echo -e "\v\tsudo yum -y install openssh \n\tsudo systemctl enable --now sshd"
+            fi
+        else
+            echo "Connection Failed"
+        fi
+
     
     else
         echo -e "\vInvalid Input"
@@ -104,6 +152,7 @@ do
             ;;
         00) 
             echo "Exiting"
+            exit 0 &>> /dev/null
             break
             ;;
         *)
