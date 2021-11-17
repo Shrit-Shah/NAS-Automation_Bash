@@ -44,7 +44,7 @@ new_setup()
                 then   
                     echo -e "\nServer configuration successful\n"
                     read -p "Name of backup folder here on the Client: " client_dir
-                    mkdir ${HOME}/Desktop/${client_dir}
+                    mkdir -p ${HOME}/Desktop/${client_dir} &>> /dev/null
                     
                     sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
                     if [ $? -eq 0 ]
@@ -94,7 +94,7 @@ new_setup()
                 then   
                     echo -e "\nServer configuration successful\n"
                     read -p "Name of backup folder here on the Client: " client_dir
-                    mkdir ${HOME}/Desktop/${client_dir}
+                    mkdir -p ${HOME}/Desktop/${client_dir} &>> /dev/null
                     
                     sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
                     if [ $? -eq 0 ]
@@ -108,7 +108,7 @@ new_setup()
                     echo "Server configuration failed"
                 fi
             else
-                echo -e "SSH connection failed\nPlease run the below commands manually on the server system & run this script again."
+                echo -e "SSH connection failed\nPlease run the below commands manually on the Server system & run this script again."
                 echo -e "\v\tsudo yum -y install openssh \n\tsudo systemctl enable --now sshd"
             fi
         else
@@ -123,20 +123,24 @@ new_setup()
 
 }
 
-modify_setup()
-{
-    echo "Coming Soon!!"
-}
-
 uninstall()
 {
-    echo "Coming Soon!!"
+    read -p "Enter the Client-side folder location: " client_dir
+    sudo umount $client_dir
+    sudo rmdir $client_dir
+    if [ $? -eq 0 ]
+    then
+        echo -e "\n Client-side uninstallation successful"
+    fi
+
+    echo -e "\v NOTE: Only the NAS configurations are removed. The backup data on the server drive is not deleted."
+    exit
 }
 
 while [ 0 ]
 do
     echo "-----------------------------------------------------------------------------"
-    echo -e "\v\t1) Setup new storage \n\t2) Modify existing configuration \n\t3) Remove all NAS connections \n\t00) Exit" #Main Menu
+    echo -e "\v\t1) Setup new storage \n\t2) Uninstall NAS configuration \n\t00) Exit" #Main Menu
 
     read -p "--> " menu_opt
 
@@ -144,10 +148,7 @@ do
         1) 
             new_setup
             ;;
-        2) 
-            modify_setup
-            ;;
-        3) 
+        2)  
             uninstall
             ;;
         00) 
