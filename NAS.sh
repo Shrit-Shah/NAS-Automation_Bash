@@ -34,7 +34,7 @@ new_setup()
     printf "${C}[${W}+${C}] Select your option: ${NC}"
     read server_location
 
-    if [ $server_location -eq 1 ]
+    if [ $server_location -eq 1 ] 2>> /dev/null
     then
         client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
         printf "${C}[${W}+${C}] Enter Private ip-address of the server system: ${NC}" 
@@ -59,7 +59,7 @@ new_setup()
                 printf "${C}[${W}+${C}] Name of backup folder on the Server: ${NC}" 
                 read server_bak_dir
                 cmd=$(echo sudo -S -p "Enter\ sudo\ password\ of\ server-side: " bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
-                echo -e "\n Configuring NAS server on $server_ip...\n"
+                echo -e "\n${C}[${W}*${C}] Configuring NAS server on $server_ip...${NC}\n"
                 ssh ${usr_name}@${server_ip} $cmd
                 if [ $? -eq 0 ]
                 then   
@@ -71,23 +71,24 @@ new_setup()
                     sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
                     if [ $? -eq 0 ]
                     then    
-                        echo -e "\n Finalizing Setup...\t[This may take a minute]\n"
+                        echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
                         cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
-                        echo -e "\v\t${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
+                        echo -e "\n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end
                     fi
                 else
-                    echo "Server configuration failed"
+                    echo -e "${R}[${W}!${R}] ${BR}Server configuration failed${NC}"
                 fi
             else
-                echo -e "SSH connection failed\nPlease run the below commands manually on the server system & run this script again."
+                echo -e "${R}[${W}!${R}] ${BR}SSH connection failed${NC}"
+                echo -e "Please run the below commands manually on the server system & run this script again."
                 echo -e "\v\tsudo yum -y install openssh \n\tsudo systemctl enable --now sshd"
             fi
         else
-            echo "Connection Failed"
+            echo -e "${R}[${W}!${R}] ${BR}Connection Failed${NC}"
         fi
 
-    elif [ $server_location -eq 2 ]
+    elif [ $server_location -eq 2 ] 2>> /dev/null
     then
         client_ip=$(dig +short myip.opendns.com @resolver1.opendns.com) # Client Public IP-address
         printf "${C}[${W}+${C}] Enter Public ip-address of the server system: ${NC}" 
@@ -95,7 +96,7 @@ new_setup()
         
         # IP validation - REGEX: ((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}
 
-        echo -e "\n Establishing connection to $server_ip ... \n"
+        echo -e "\n${C}[${W}*${C}] Establishing connection to $server_ip ... ${NC}\n"
 
         ping -c 3 $server_ip &>> /dev/null
         if [ $? -eq 0 ]
@@ -114,7 +115,7 @@ new_setup()
                 printf "${C}[${W}+${C}] Name of backup folder on the Server: ${NC}" 
                 read server_bak_dir
                 cmd=$(echo sudo bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
-                echo -e "\n Configuring NAS server on $server_ip ...\n"
+                echo -e "\n${C}[${W}*${C}] Configuring NAS server on $server_ip ...${NC}\n"
                 ssh -i $key_file ${usr_name}@${server_ip} $cmd
                 if [ $? -eq 0 ]
                 then   
@@ -126,25 +127,26 @@ new_setup()
                     sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
                     if [ $? -eq 0 ]
                     then    
-                        echo -e "\n Finalizing Setup...\t[This may take a minute]\n"
+                        echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
                         cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
                         echo -e "\v\t${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end
                     fi
                 else
-                    echo "Server configuration failed"
+                    echo -e "${R}[${W}!${R}] ${BR}Server configuration failed${NC}"
                 fi
             else
-                echo -e "SSH connection failed\nPlease run the below commands manually on the Server system & run this script again."
+                echo -e "${R}[${W}!${R}] ${BR}SSH connection failed${NC}"
+                echo -e "Please run the below commands manually on the Server system & run this script again."
                 echo -e "\v\tsudo yum -y install openssh \n\tsudo systemctl enable --now sshd"
             fi
         else
-            echo "Connection Failed"
+            echo -e "${R}[${W}!${R}] ${BR}Connection Failed${NC}"
         fi
 
     
     else
-        echo -e "\vInvalid Input"
+        echo -e "${R}[${W}!${R}] ${BR}Select valid option from the menu${NC}"
     fi
 
 
@@ -158,23 +160,24 @@ uninstall()
     sudo rmdir $client_dir
     if [ $? -eq 0 ]
     then
-        echo -e "\n ${G}[${W}^${G}] ${BG}Client-side uninstallation Successful${NC}"
+        echo -e "\n${G}[${W}^${G}] ${BG}Client-side uninstallation Successful${NC}"
+        echo -e "\n${BR}NOTE: Only the NAS configurations are removed. The backup data on the server drive is not deleted.${NC}"
+    else
+        echo -e "\n${R}[${W}!${R}] ${BR}Uninstallation Failed ${NC}"
     fi
-
-    echo -e "\v ${BR}NOTE: Only the NAS configurations are removed. The backup data on the server drive is not deleted.${NC}"
-    end
 }
 
 end()
 {
+    printf "\n${C}[${W}*${C}] ${W}Press ENTER key to continue...${NC}\n\n"; read
     clear
     exit 0 &>> /dev/null
 }
 
 while [ 0 ]
 do
-    #echo "-----------------------------------------------------------------------------"
-    echo -e "\v\v\t${C}[${W}1${C}] ${Y}Setup new storage \n\t${C}[${W}2${C}] ${Y}Uninstall NAS configuration \n\t${C}[${W}0${C}] ${Y}Exit${NC}\n" #Main Menu
+    echo -e "\v-----------------------------------------------------------------------------"
+    echo -e "\v\t${C}[${W}1${C}] ${Y}Setup new storage \n\t${C}[${W}2${C}] ${Y}Uninstall NAS configuration \n\t${C}[${W}0${C}] ${Y}Exit${NC}\n" #Main Menu
 
     printf "${C}[${W}+${C}] Select your option: ${NC}" 
     read menu_opt
@@ -187,12 +190,12 @@ do
             uninstall
             ;;
         0) 
-            echo "Exiting..."
+            echo -e "${C}[${W}*${C}] ${R}Exiting...${NC}"
             end
             break
             ;;
         *)
-            echo "Select valid option from the menu"
+            echo -e "${R}[${W}!${R}] ${BR}Select valid option from the menu${NC}"
             ;;
     esac
 done
