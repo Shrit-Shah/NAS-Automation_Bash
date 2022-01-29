@@ -77,15 +77,15 @@ new_setup()
                         end
                     fi
                 else
-                    echo -e "${R}[${W}!${R}] ${BR}Server configuration failed${NC}"
+                    echo -e "${R}[${W}!${R}] ${BR}${blink}Server configuration Failed${NC}"
                 fi
             else
-                echo -e "${R}[${W}!${R}] ${BR}SSH connection failed${NC}"
+                echo -e "${R}[${W}!${R}] ${BR}${blink}SSH connection Failed${NC}"
                 echo -e "Please run the below commands manually on the server system & run this script again."
                 echo -e "\v\tsudo yum -y install openssh \n\tsudo systemctl enable --now sshd"
             fi
         else
-            echo -e "${R}[${W}!${R}] ${BR}Connection Failed${NC}"
+            echo -e "${R}[${W}!${R}] ${BR}${blink}Connection Failed${NC}"
         fi
 
     elif [ $server_location -eq 2 ] 2>> /dev/null
@@ -129,24 +129,24 @@ new_setup()
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
                         cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
-                        echo -e "\v\t${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
+                        echo -e "n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end
                     fi
                 else
-                    echo -e "${R}[${W}!${R}] ${BR}Server configuration failed${NC}"
+                    echo -e "${R}[${W}!${R}] ${BR}${blink}Server configuration Failed${NC}"
                 fi
             else
-                echo -e "${R}[${W}!${R}] ${BR}SSH connection failed${NC}"
-                echo -e "Please run the below commands manually on the Server system & run this script again."
+                echo -e "${R}[${W}!${R}] ${BR}${blink}SSH connection Failed${NC}"
+                echo -e "${C}[${W}*${C}]Please run the below commands manually on the Server system & run this script again.${NC}"
                 echo -e "\v\tsudo yum -y install openssh \n\tsudo systemctl enable --now sshd"
             fi
         else
-            echo -e "${R}[${W}!${R}] ${BR}Connection Failed${NC}"
+            echo -e "${R}[${W}!${R}] ${BR}${blink}Connection Failed${NC}"
         fi
 
     
     else
-        echo -e "${R}[${W}!${R}] ${BR}Select valid option from the menu${NC}"
+        echo -e "${R}[${W}!${R}] ${BR}${blink}Select valid option from the menu${NC}"
     fi
 
 
@@ -161,9 +161,9 @@ uninstall()
     if [ $? -eq 0 ]
     then
         echo -e "\n${G}[${W}^${G}] ${BG}Client-side uninstallation Successful${NC}"
-        echo -e "\n${BR}NOTE: Only the NAS configurations are removed. The backup data on the server drive is not deleted.${NC}"
+        echo -e "\n${R}NOTE: Only the NAS configurations are removed. The backup data on the server drive is not deleted.${NC}"
     else
-        echo -e "\n${R}[${W}!${R}] ${BR}Uninstallation Failed ${NC}"
+        echo -e "\n${R}[${W}!${R}] ${BR}${blink}Uninstallation Failed${NC}"
     fi
 }
 
@@ -195,7 +195,7 @@ do
             break
             ;;
         *)
-            echo -e "${R}[${W}!${R}] ${BR}Select valid option from the menu${NC}"
+            echo -e "${R}[${W}!${R}] ${BR}${blink}Select valid option from the menu${NC}"
             ;;
     esac
 done
