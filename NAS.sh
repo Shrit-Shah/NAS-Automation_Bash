@@ -129,7 +129,7 @@ new_setup()
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
                         cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
-                        echo -e "n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
+                        echo -e "${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end
                     fi
                 else
