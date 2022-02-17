@@ -219,15 +219,20 @@ do
             done
             if [ -e cron_file ]
             then
-                rm cron_file
+                rm cron_file &>> /dev/null
                 touch cron_file
             else
                 touch cron_file
             fi
-            for i in ${!file_location[@]}; do
-                echo "cp -rf ${file_location[$i] $client_dir" >> "cron_file"
-	            #echo -e "\t $((i+1)): ${file_location[$i]}"
+            for i in ${!file_location[@]}; 
+            do
+                echo "$cron_time cp -rf ${file_location[$i] $client_dir" >> "cron_file"
             done
+
+            crontab -l > /tmp/crontab_new
+            cat < cron_file >> /tmp/crontab_new
+            crontab /tmp/crontab_new
+
             ;;
         No|N|n|no|NO)
             echo "You will have to backup files manually by copy pasting into the $client_dir directory."
