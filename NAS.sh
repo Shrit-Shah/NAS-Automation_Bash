@@ -159,7 +159,9 @@ new_setup()
 
 backup_scheduling()
 {
-    printf "\v${B}[${W}?${B}] Do you want to backup directories automatically? [Yes/No]:"
+while [ 0 ]
+do 
+    printf "\v${B}[${W}?${B}] Do you want to backup directories automatically? [Yes/No]:${NC}"
     read menu_opt
     case $menu_opt in
         Yes|Y|y|yes|YES)
@@ -176,20 +178,66 @@ backup_scheduling()
 		        file_location[$i]=$file
 		        ((i++))
             done
-            echo -e "These flis/directories will backup automatically.\n"
+            echo -e "These files/directories will backup automatically.\n"
             for i in ${!file_location[@]}; do
 	            echo -e "\t $((i+1)): ${file_location[$i]}"
+            done
+            while [ 0 ]
+            do 
+                echo -e "\v${B}[${W}?${B}] How often do you want to backup the above items?\n\n\t${C}[${W}1${C}] ${Y}At every Boot \n\t${C}[${W}2${C}] ${Y}Hourly\n\t${C}[${W}3${C}] ${Y}Daily\n\t${C}[${W}4${C}] ${Y}Weekly\n\t${C}[${W}5${C}] ${Y}Monthly\n\t${C}[${W}6${C}] ${Y}Yearly ${NC}\n\n"
+                printf "${C}[${W}+${C}] Select your option: ${NC}"
+                read cron_time_opt
+                case $cron_time_opt in
+                    1)
+                        cron_time='@reboot'
+                        break
+                        ;;
+                    2)
+                        cron_time='@hourly'
+                        break
+                        ;;
+                    3)
+                        cron_time='@daily'
+                        break
+                        ;;
+                    4)
+                        cron_time='@weekly'
+                        break
+                        ;;
+                    5)
+                        cron_time='@monthly'
+                        break
+                        ;;
+                    6)
+                        cron_time='@yearly'
+                        break
+                        ;;
+                    *)
+                        echo -e "${R}[${W}!${R}] ${BR}${blink}Select valid option from the menu${NC}"
+                        ;;
+                esac
+            done
+            if [ -e cron_file ]
+            then
+                rm cron_file
+                touch cron_file
+            else
+                touch cron_file
+            fi
+            for i in ${!file_location[@]}; do
+                echo "cp -rf ${file_location[$i] $client_dir" >> "cron_file"
+	            #echo -e "\t $((i+1)): ${file_location[$i]}"
             done
             ;;
         No|N|n|no|NO)
             echo "You will have to backup files manually by copy pasting into the $client_dir directory."
+            break
             ;;
         *)
             echo -e "${R}[${W}!${R}] ${BR}${blink}Enter 'Yes' or 'No'${NC}"
-            backup_scheduling
             ;;
     esac
-     
+done     
 }
 
 uninstall()
