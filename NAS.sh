@@ -1,10 +1,26 @@
 #!/bin/bash
 
-which figlet &>> /dev/null
-if [ $? -ne 0 ]
-then 
-    sudo yum install figlet -y
+which yum &>> /dev/null
+if [ $? -eq 0 ]
+then
+    which figlet &>> /dev/null
+    if [ $? -ne 0 ]
+    then 
+        sudo yum install figlet -y &>> /dev/null
+    fi
 fi
+
+which apt &>> /dev/null
+if [ $? -eq 0 ]
+then
+    which figlet &>> /dev/null
+    if [ $? -ne 0 ]
+    then 
+        sudo apt install figlet -y &>> /dev/null
+    fi
+fi
+
+
 #--------------------ASCII Font Values---------------
 NC="\e[0m" #Reset/No Color modifications
 #Font Colour with BOLD
@@ -77,8 +93,9 @@ new_setup()
                         cp Thank_You.txt ${client_dir}/
                         echo -e "\n${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
 
+                        backup_scheduling $client_dir 
 
-
+                        echo -e "\n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end
                     fi
                 else
@@ -135,6 +152,10 @@ new_setup()
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
                         cp Thank_You.txt ${client_dir}/
                         echo -e "${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
+
+                        backup_scheduling $client_dir 
+
+                        echo -e "\n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end
                     fi
                 else
@@ -159,6 +180,7 @@ new_setup()
 
 backup_scheduling()
 {
+client_dir = $1
 while [ 0 ]
 do 
     printf "\v${B}[${W}?${B}] Do you want to backup directories automatically? [Yes/No]:${NC}"
@@ -166,7 +188,7 @@ do
     case $menu_opt in
         Yes|Y|y|yes|YES)
             file_location=(); i=0
-            echo -e "Enter absolute path of the Files/Directories you want to backup."
+            echo -e "\n${C}[${W}*${C}]Enter absolute path of the Files/Directories you want to backup.${NC}\n"
             while [ 0 ]
             do 		
                 printf "${C}[${W}+${C}] Location $((i+1)): ${NC}"
@@ -178,9 +200,9 @@ do
 		        file_location[$i]=$file
 		        ((i++))
             done
-            echo -e "These files/directories will backup automatically.\n"
+            echo -e "${C}[${W}*${C}]These files/directories will backup automatically.\n${NC}"
             for i in ${!file_location[@]}; do
-	            echo -e "\t $((i+1)): ${file_location[$i]}"
+	            echo -e "\t ${G}$((i+1)):${NC} ${file_location[$i]}"
             done
             while [ 0 ]
             do 
@@ -226,16 +248,17 @@ do
             fi
             for i in ${!file_location[@]}; 
             do
-                echo "$cron_time cp -rf ${file_location[$i] $client_dir" >> "cron_file"
+                echo -e "$cron_time cp -rf ${file_location[$i]} $client_dir" >> "cron_file"
             done
 
-            crontab -l > /tmp/crontab_new
-            cat < cron_file >> /tmp/crontab_new
-            crontab /tmp/crontab_new
-
+            crontab -l > /tmp/crontab_new  &>> /dev/null
+            cat < cron_file >> /tmp/crontab_new  &>> /dev/null
+            crontab /tmp/crontab_new  
+            
+            break 
             ;;
         No|N|n|no|NO)
-            echo "You will have to backup files manually by copy pasting into the $client_dir directory."
+            echo -e "\n${C}[${W}*${C}]You will have to backup files manually by copy pasting into the $client_dir directory.${NC}"
             break
             ;;
         *)
@@ -249,8 +272,8 @@ uninstall()
 {
     printf "${C}[${W}+${C}] Enter the Client-side folder location: ${NC}" 
     read client_dir
-    sudo umount $client_dir
-    sudo rmdir $client_dir
+    sudo umount $client_dir  2>> /dev/null
+    sudo rmdir $client_dir  2>> /dev/null
     if [ $? -eq 0 ]
     then
         echo -e "\n${G}[${W}^${G}] ${BG}Client-side uninstallation Successful${NC}"
@@ -277,7 +300,7 @@ do
 
     case $menu_opt in 
         1) 
-            new_setup
+            backup_scheduling
             ;;
         2)  
             uninstall
