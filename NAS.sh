@@ -58,7 +58,7 @@ new_setup()
             then
                 echo -e "\n${G}[${W}^${G}] ${BG}SSH connection Successful${NC}\n"
                 
-                printf "${C}[${W}+${C}] Name of backup folder on the Server: ${NC}" 
+                printf "${C}[${W}+${C}] Name & absolute path of backup folder on the Server: ${NC}" 
                 read server_bak_dir
                 cmd=$(echo sudo -S -p "Enter\ sudo\ password\ of\ server-side: " bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
                 echo -e "\n${C}[${W}*${C}] Configuring NAS server on $server_ip...${NC}\n"
@@ -66,15 +66,15 @@ new_setup()
                 if [ $? -eq 0 ]
                 then   
                     echo -e "\n${G}[${W}^${G}] ${BG}Server configuration Successful${NC}\n"
-                    printf "${C}[${W}+${C}] Name of backup folder here on the Client: ${NC}" 
+                    printf "${C}[${W}+${C}] Name & absolute path of backup folder here on the Client: ${NC}" 
                     read client_dir
-                    mkdir -p ${HOME}/Desktop/${client_dir} &>> /dev/null
+                    mkdir -p ${client_dir} &>> /dev/null
                     
-                    sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
+                    sudo mount  ${server_ip}:${server_bak_dir}  ${client_dir} #Mounting directories
                     if [ $? -eq 0 ]
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
-                        cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
+                        cp Thank_You.txt ${client_dir}/
                         echo -e "\n${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
 
 
@@ -117,7 +117,7 @@ new_setup()
             then
                 echo -e "\n${G}[${W}^${G}] ${BG}SSH connection Successful${NC}\n"
                 
-                printf "${C}[${W}+${C}] Name of backup folder on the Server: ${NC}" 
+                printf "${C}[${W}+${C}] Name & absolute path of backup folder on the Server: ${NC}" 
                 read server_bak_dir
                 cmd=$(echo sudo bash /tmp/server.sh ${usr_name} ${server_bak_dir} ${client_ip})
                 echo -e "\n${C}[${W}*${C}] Configuring NAS server on $server_ip ...${NC}\n"
@@ -125,15 +125,15 @@ new_setup()
                 if [ $? -eq 0 ]
                 then   
                     echo -e "\n${G}[${W}^${G}] ${BG}Server configuration Successful${NC}\n"
-                    printf "${C}[${W}+${C}] Name of backup folder here on the Client: ${NC}"
+                    printf "${C}[${W}+${C}] Name & absolute path of backup folder here on the Client: ${NC}"
                     read client_dir
-                    mkdir -p ${HOME}/Desktop/${client_dir} &>> /dev/null
+                    mkdir -p ${client_dir} &>> /dev/null
                     
-                    sudo mount  ${server_ip}:/home/${usr_name}/Desktop/${server_bak_dir}  ${HOME}/Desktop/${client_dir} #Mounting directories
+                    sudo mount  ${server_ip}:${server_bak_dir} ${client_dir} #Mounting directories
                     if [ $? -eq 0 ]
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
-                        cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
+                        cp Thank_You.txt ${client_dir}/
                         echo -e "${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
                         end
                     fi

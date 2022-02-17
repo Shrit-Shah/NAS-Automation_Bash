@@ -28,10 +28,10 @@ then
     
 fi
 
-mkdir -p /home/${usr_name}/Desktop/${server_bak_dir}  # Create server backup folder
-chmod 777 /home/${usr_name}/Desktop/${server_bak_dir}
+mkdir -p ${server_bak_dir}  # Create server backup folder
+chmod 777 ${server_bak_dir}
 
-echo "/home/${usr_name}/Desktop/${server_bak_dir} ${client_ip}(rw,no_root_squash)" | cat > /etc/exports
+echo "${server_bak_dir} ${client_ip}(rw,no_root_squash)" | cat > /etc/exports
 
 systemctl restart nfs-server # Restarting NAS Server
 
