@@ -28,6 +28,8 @@ clear
 echo -e "$W"; figlet -t Smart Backup; echo -e "$NC"
 echo -e "\t\t\e[31;1m:::::: \e[0;7mBy: Shrit Shah & Yashvi Soni${NC} \e[31;1m::::::${NC}"
 
+
+
 new_setup()
 {
     echo -e "\v${B}[${W}?${B}] Where do you want to setup your storage server? \n\n\t${C}[${W}1${C}] ${Y} Another system on the same LAN. \n\t${C}[${W}2${C}] ${Y} In a cloud virtual machine.${NC}\n\n"
@@ -73,7 +75,10 @@ new_setup()
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
                         cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
-                        echo -e "\n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
+                        echo -e "\n${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
+
+
+
                         end
                     fi
                 else
@@ -129,7 +134,7 @@ new_setup()
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
                         cp Thank_You.txt ${HOME}/Desktop/${client_dir}/
-                        echo -e "${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
+                        echo -e "${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
                         end
                     fi
                 else
@@ -150,6 +155,41 @@ new_setup()
     fi
 
 
+}
+
+backup_scheduling()
+{
+    printf "\v${B}[${W}?${B}] Do you want to backup directories automatically? [Yes/No]:"
+    read menu_opt
+    case $menu_opt in
+        Yes|Y|y|yes|YES)
+            file_location=(); i=0
+            echo -e "Enter absolute path of the Files/Directories you want to backup."
+            while [ 0 ]
+            do 		
+                printf "${C}[${W}+${C}] Location $((i+1)): ${NC}"
+                read file
+		        if [ -z $file ]
+		        then
+			        break
+		        fi
+		        file_location[$i]=$file
+		        ((i++))
+            done
+            echo -e "These flis/directories will backup automatically.\n"
+            for i in ${!file_location[@]}; do
+	            echo -e "\t $((i+1)): ${file_location[$i]}"
+            done
+            ;;
+        No|N|n|no|NO)
+            echo "You will have to backup files manually by copy pasting into the $client_dir directory."
+            ;;
+        *)
+            echo -e "${R}[${W}!${R}] ${BR}${blink}Enter 'Yes' or 'No'${NC}"
+            backup_scheduling
+            ;;
+    esac
+     
 }
 
 uninstall()
