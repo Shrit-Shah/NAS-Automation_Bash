@@ -87,6 +87,7 @@ new_setup()
                     mkdir -p ${client_dir} &>> /dev/null
                     
                     sudo mount  ${server_ip}:${server_bak_dir}  ${client_dir} #Mounting directories
+                    (sudo crontab -l; echo "@reboot mount  ${server_ip}:${server_bak_dir}  ${client_dir}") | sort -u | sudo crontab -
                     if [ $? -eq 0 ]
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
@@ -147,6 +148,7 @@ new_setup()
                     mkdir -p ${client_dir} &>> /dev/null
                     
                     sudo mount  ${server_ip}:${server_bak_dir} ${client_dir} #Mounting directories
+                    (sudo crontab -l; echo "@reboot mount  ${server_ip}:${server_bak_dir}  ${client_dir}") | sort -u | sudo crontab -
                     if [ $? -eq 0 ]
                     then    
                         echo -e "\n${C}[${W}*${C}] Finalizing Setup...${NC}\t[This may take a minute]\n"
@@ -180,7 +182,7 @@ new_setup()
 
 backup_scheduling()
 {
-client_dir = $1
+client_dir=$1
 while [ 0 ]
 do 
     printf "\v${B}[${W}?${B}] Do you want to backup directories automatically? [Yes/No]:${NC}"
@@ -206,12 +208,12 @@ do
             done
             while [ 0 ]
             do 
-                echo -e "\v${B}[${W}?${B}] How often do you want to backup the above items?\n\n\t${C}[${W}1${C}] ${Y}At every Boot \n\t${C}[${W}2${C}] ${Y}Hourly\n\t${C}[${W}3${C}] ${Y}Daily\n\t${C}[${W}4${C}] ${Y}Weekly\n\t${C}[${W}5${C}] ${Y}Monthly\n\t${C}[${W}6${C}] ${Y}Yearly ${NC}\n\n"
+                echo -e "\v${B}[${W}?${B}] How often do you want to backup the above items?\n\n\t${C}[${W}1${C}] ${Y}At every Minute \n\t${C}[${W}2${C}] ${Y}Hourly\n\t${C}[${W}3${C}] ${Y}Daily\n\t${C}[${W}4${C}] ${Y}Weekly\n\t${C}[${W}5${C}] ${Y}Monthly\n\t${C}[${W}6${C}] ${Y}Yearly ${NC}\n\n"
                 printf "${C}[${W}+${C}] Select your option: ${NC}"
                 read cron_time_opt
                 case $cron_time_opt in
                     1)
-                        cron_time='@reboot'
+                        cron_time='*/1 * * * *'
                         break
                         ;;
                     2)
@@ -251,10 +253,11 @@ do
                 echo -e "$cron_time cp -rf ${file_location[$i]} $client_dir" >> "cron_file"
             done
 
-            crontab -l > /tmp/crontab_new  &>> /dev/null
-            cat < cron_file >> /tmp/crontab_new  &>> /dev/null
+            crontab -l > /tmp/crontab_new  2>> /dev/null
+            cat < cron_file >> /tmp/crontab_new  2>> /dev/null
             crontab /tmp/crontab_new  
             
+            echo -e "\n${G}[${W}^${G}] ${BG}Backup Scheduled${NC}\n"
             break 
             ;;
         No|N|n|no|NO)
@@ -273,6 +276,7 @@ uninstall()
     printf "${C}[${W}+${C}] Enter the Client-side folder location: ${NC}" 
     read client_dir
     sudo umount $client_dir  2>> /dev/null
+    sleep 2
     sudo rmdir $client_dir  2>> /dev/null
     if [ $? -eq 0 ]
     then
@@ -300,7 +304,7 @@ do
 
     case $menu_opt in 
         1) 
-            backup_scheduling
+            new_setup
             ;;
         2)  
             uninstall
