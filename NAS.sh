@@ -57,8 +57,6 @@ new_setup()
         client_ip=$(hostname -I | awk {'print $1}') # Client Private IP-address
         printf "${C}[${W}+${C}] Enter Private ip-address of the server system: ${NC}" 
         read server_ip
-        
-        # IP validation - REGEX: ((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}
 
         echo -e "\n${C}[${W}*${C}] Establishing connection to $server_ip ... \n${NC}"
 
