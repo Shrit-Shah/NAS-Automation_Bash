@@ -274,7 +274,12 @@ uninstall()
     printf "${C}[${W}+${C}] Enter the Client-side folder location: ${NC}" 
     read client_dir
     sudo umount $client_dir  2>> /dev/null
+
+    crontab -l | grep -v "${client_dir}"  > /tmp/crontab_new
+    crontab /tmp/crontab_new
+
     sleep 2
+
     sudo rmdir $client_dir  2>> /dev/null
     if [ $? -eq 0 ]
     then
