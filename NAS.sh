@@ -93,7 +93,8 @@ new_setup()
                         echo -e "\n${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
 
                         backup_scheduling $client_dir 
-
+                        rm -f cron_file &>> /dev/null
+                        
                         echo -e "\n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end
                     fi
@@ -154,6 +155,7 @@ new_setup()
                         echo -e "${G}[${W}^${G}] ${BG}Server<-->Client linking Successful${NC}\n"
 
                         backup_scheduling $client_dir 
+                        rm -f cron_file &>> /dev/null
 
                         echo -e "\n${G}[${W}^${G}] ${BG}Setup Successful${NC}\n"
                         end

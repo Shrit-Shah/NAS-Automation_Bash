@@ -1,2 +1,0 @@
-*/1 * * * * cp -rf /home/shrit/Desktop/NAS-Project.pem /home/shrit/Desktop/Client
-*/1 * * * * cp -rf /home/shrit/Desktop/NAS-Automation_Bash /home/shrit/Desktop/Client
