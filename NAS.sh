@@ -42,7 +42,7 @@ blink="\e[5m" #Blinking Text
 
 clear
 echo -e "$W"; figlet -t Smart Backup; echo -e "$NC"
-echo -e "\t\t\e[31;1m:::::: \e[0;7mBy: Shrit Shah & Yashvi Soni${NC} \e[31;1m::::::${NC}"
+echo -e "\t\t\e[31;1m:::::: \e[0;7mBy: Shrit Shah${NC} \e[31;1m::::::${NC}"
 
 
 
