@@ -5,9 +5,10 @@ The Bash scripts are designed to automate the setup of Network Attached Storage 
 ## Features
 - **Menu-based Interface:** A user-friendly menu system simplifies the setup and uninstallation process.
 - **Automatic Setup:** Automates the setup of storage servers between Linux systems.
-- **Cloud Support:** Allows for NAS configuration on cloud virtual machines.
+- **LAN Cloud Support:** Allows for NAS configuration on cloud virtual machines as well as on private networks.
 - **Periodic Backups:** Facilitates automatic periodic backups with customizable scheduling options.
 - **Compatibility:** Works seamlessly with Ubuntu and RedHat-based Linux distributions.
+- **Support Many-to-Many mesh connections between Servers and Clients:** Enable flexible and scalable network configurations, fostering efficient communication and data exchange among multiple servers and clients within the system.
 
 ## Prerequisites
 **figlet:** ASCII font manipulation tool used for a stylish display.
